@@ -1,0 +1,46 @@
+enum transactionType {
+  deposit
+  withdraw
+}
+
+enum approvalStatusEnum {
+  approved
+  rejected
+  pending
+}
+
+input transactionInput {
+  transactionBy: String!
+  amount: Float!
+  transactionType: transactionType!
+}
+
+type transactionOutput {
+  success: Boolean
+  message: String
+  status: Int
+}
+
+type transaction implements Node {
+  _id: ID!
+  amount: Float
+  approvalStatus: approvalStatusEnum
+  transactionBy: String
+  transactionByInfo: Account
+  transactionId: String
+  transactionType: transactionType
+}
+
+extend type Mutation {
+  makeTransaction(input: transactionInput!): transaction
+  deleteTransaction(transactionId: String!): Boolean
+  updateTransactionStatus(
+    transactionId: String!
+    approvalStatus: approvalStatusEnum!
+  ): Boolean
+}
+
+extend type Query {
+  getAllTransactions: [transaction]
+  getUserTransactions: [transaction]
+}
